@@ -1,5 +1,6 @@
 const FileHandler = require("./fileHandler");
 const Executor = require("./executor");
+const { response } = require("express");
 
 const tempPath = "../temp/";
 const srcPath = tempPath + "src";
@@ -7,11 +8,23 @@ const binPath = tempPath + "bin";
 
 const run = (fid, sourceCode) => {
   let fh = new FileHandler(fid, "cpp", srcPath, sourceCode);
-  fh.createSourceFile((filePath) => {
+  fh.createSourceFile().then((filePath) => {
     let executor = new Executor(fid, filePath, binPath);
-    executor.compile(() => executor.run());
+    executor
+      .compile()
+      .then(() => {
+        return executor.run();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((reason) => {
+        console.error(reason);
+      })
+      .finally(() => {
+        fh.deleteFile();
+      });
   });
-  setTimeout(() => fh.deleteFile(), 10 * 1000);
 };
 
 let fid = "154";

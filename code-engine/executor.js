@@ -11,32 +11,34 @@ class Executor {
     this.outputpath = outputpath;
   }
 
-  compile(callback) {
-    let cmp = exec(
-      `g++ ${this.sourcepath} -std=c++17 -o ${this.outputpath}/${this.fid}.out`,
-      (err, stdout, stderr) => {
-        if (err) {
-          console.error(stderr);
-          return;
+  compile = () =>
+    new Promise((resolve, reject) => {
+      let binaryPath = `${this.outputpath}/${this.fid}.out`;
+      let cmp = exec(
+        `g++ ${this.sourcepath} -std=c++17 -o ${binaryPath}`,
+        (err, stdout, stderr) => {
+          if (err) {
+            // console.error(stderr);
+            reject(stderr);
+          }
+          // console.log(`File Complied`);
+          resolve(binaryPath);
         }
-        console.log(`File Complied`);
-        callback();
-      }
-    );
-  }
+      );
+    });
 
-  run() {
-    let cpprun = exec(
-      `cd ${this.outputpath} && ./${this.fid}.out`,
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(stderr);
-          return;
+  run = () =>
+    new Promise((resolve, reject) => {
+      let cpprun = exec(
+        `cd ${this.outputpath} && ./${this.fid}.out`,
+        (error, stdout, stderr) => {
+          if (error) {
+            reject(stderr);
+          }
+          resolve(stdout);
         }
-        console.log(stdout);
-      }
-    );
-  }
+      );
+    });
 }
 
 module.exports = Executor;

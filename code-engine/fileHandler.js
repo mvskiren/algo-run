@@ -5,7 +5,7 @@ const fs = require("fs");
  * File Handler
  * This class takes in file id, extension such as cpp, java, txt etc, path and source code
  * This class creates and delete files
- * 
+ *
  * TODO: Re write file for better maintainance
  */
 class FileHanlder {
@@ -18,36 +18,34 @@ class FileHanlder {
     this.sourceCode = sourceCode;
   }
 
-  createSourceFile = (callback) => {
-    const filePath = `${this.dir}/${this.fid}.${this.ext}`;
-    fs.writeFile(filePath, this.sourceCode, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log(`Created file at location : ${filePath}`);
-      this.filePath = filePath;
-      this.isCreated = true;
-      callback(filePath);
+  createSourceFile = () =>
+    new Promise((resolve, reject) => {
+      const filePath = `${this.dir}/${this.fid}.${this.ext}`;
+      fs.writeFile(filePath, this.sourceCode, (err) => {
+        if (err) {
+          // console.error(err);
+          reject(err);
+        }
+        console.log(`Created file at location : ${filePath}`);
+        this.filePath = filePath;
+        this.isCreated = true;
+        resolve(filePath);
+      });
     });
-  };
 
-  deleteFile = () => {
-    if(!this.isCreated){
-      console.log('File not created');
-      return;
-    }
-    fs.unlink(this.filePath, (err) => {
-      if (err) {
-        console.log(err);
-        return;
+  deleteFile = () =>
+    new Promise((resolve, reject) => {
+      if (!this.isCreated) {
+        reject("File not created");
       }
-      console.log(`Deleted file at location : ${this.filePath}`);
-      this.isCreated = false;
+      fs.unlink(this.filePath, (err) => {
+        if (err) {
+          reject(err);
+        }
+        this.isCreated = false;
+        resolve(`Deleted file at location : ${this.filePath}`);
+      });
     });
-  };
 }
 
 module.exports = FileHanlder;
-
-
