@@ -26,7 +26,6 @@ class FileHanlder {
           // console.error(err);
           reject(err);
         }
-        console.log(`Created file at location : ${filePath}`);
         this.filePath = filePath;
         this.isCreated = true;
         resolve(filePath);
