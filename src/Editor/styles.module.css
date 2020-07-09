@@ -1,0 +1,21 @@
+button {
+    height: 2em;
+    width: 100px;
+    padding: 1.5em auto;
+    margin: 1em auto;
+    background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
+    border: none;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    color: white;
+   margin-right: 20px;
+  }
+  
+  .dropdown{
+    width: 100px;
+    margin: 10px;
+    
+  }
+
+ 
